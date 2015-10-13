@@ -1,6 +1,6 @@
 /*!
-	Slimbox v2.04 - The ultimate lightweight Lightbox clone for jQuery
-	(c) 2007-2010 Christophe Beyls <http://www.digitalia.be>
+	Slimbox v2.05 - The ultimate lightweight Lightbox clone for jQuery
+	(c) 2007-2013 Christophe Beyls <http://www.digitalia.be>
 	MIT-style license.
 */
 
@@ -24,7 +24,7 @@
 		// Append the Slimbox HTML code at the bottom of the document
 		$("body").append(
 			$([
-				overlay = $('<div id="lbOverlay" />')[0],
+				overlay = $('<div id="lbOverlay" />').click(close)[0],
 				center = $('<div id="lbCenter" />')[0],
 				bottomContainer = $('<div id="lbBottomContainer" />')[0]
 			]).css("display", "none")
@@ -38,7 +38,7 @@
 		)[0];
 
 		bottom = $('<div id="lbBottom" />').appendTo(bottomContainer).append([
-			$('<a id="lbCloseLink" href="#" />').add(overlay).click(close)[0],
+			$('<a id="lbCloseLink" href="#" />').click(close)[0],
 			caption = $('<div id="lbCaption" />')[0],
 			number = $('<div id="lbNumber" />')[0],
 			$('<div style="clear: both;" />')[0]
@@ -154,12 +154,12 @@
 	}
 
 	function keyDown(event) {
-		var code = event.keyCode, fn = $.inArray;
+		var code = event.which, fn = $.inArray;
 		// Prevent default keyboard action (like navigating inside the page)
 		return (fn(code, options.closeKeys) >= 0) ? close()
 			: (fn(code, options.nextKeys) >= 0) ? next()
 			: (fn(code, options.previousKeys) >= 0) ? previous()
-			: false;
+			: null;
 	}
 
 	function previous() {
@@ -211,17 +211,14 @@
 		}
 		$(center).queue(function() {
 			$(bottomContainer).css({width: centerWidth, top: top + centerHeight, marginLeft: -centerWidth/2, visibility: "hidden", display: ""});
-			$(image).css({display: "none", visibility: "", opacity: ""}).fadeIn(options.imageFadeDuration);
-			animateCaption();
+			$(image).css({display: "none", visibility: "", opacity: ""}).fadeIn(options.imageFadeDuration, animateCaption);
 		});
 	}
 
 	function animateCaption() {
 		if (prevImage >= 0) $(prevLink).show();
 		if (nextImage >= 0) $(nextLink).show();
-		if (options.captionAnimationDuration) {
-			$(bottom).css("marginTop", -bottom.offsetHeight).animate({marginTop: 0}, options.captionAnimationDuration);
-		}
+		$(bottom).css("marginTop", -bottom.offsetHeight).animate({marginTop: 0}, options.captionAnimationDuration);
 		bottomContainer.style.visibility = "";
 	}
 
