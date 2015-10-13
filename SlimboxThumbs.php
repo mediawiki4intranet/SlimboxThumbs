@@ -42,9 +42,23 @@ $wgExtensionCredits['other'][] = array(
 	'version' => SlimboxThumbs_VERSION,
 );
 
+$wgResourceModules['ext.SlimboxThumbs'] = array(
+	'localBasePath' => __DIR__,
+	'remoteExtPath' => 'SlimboxThumbs',
+	'dependencies' => [],
+	'styles' => [
+		'slimbox/css/slimbox2.css',
+	],
+	'scripts' => [
+		'slimbox/js/slimbox2.js',
+		'slimbox/slimboxthumbs.js',
+	],
+);
+
 $dir = dirname( __FILE__ ) . '/';
 $wgMessagesDirs['SlimboxThumbs'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['SlimboxThumbs'] = $dir . 'SlimboxThumbs.i18n.php';
+$wgHooks['ResourceLoaderGetConfigVars'][] = 'efSBTGetVars';
 $wgHooks['BeforePageDisplay'][] = 'efSBTAddScripts';
 $wgAjaxExportList[] = 'efSBTGetImageSizes';
 $wgAjaxExportList[] = 'efSBTRemoteThumb';
@@ -102,32 +116,16 @@ function efSBTRemoteThumb( $name, $width ) {
 	return 'Error generating thumbnail';
 }
 
+function efSBTGetVars( &$vars ) {
+	global $wgServer, $wgScriptPath, $wgArticlePath;
+	$vars['wgServer'] = $wgServer;
+	$vars['wgScriptPath'] = $wgScriptPath;
+	$vars['wgArticlePath'] = $wgArticlePath;
+	return true;
+}
+
 // Adds javascript files and stylesheets.
 function efSBTAddScripts( $out ) {
-	global $wgVersion, $wgExtensionAssetsPath, $wgUploadPath, $wgServer, $wgScriptPath, $wgArticlePath;
-
-	$mw16 = version_compare( $wgVersion, '1.16', '>=' );
-	$useExtensionPath = $mw16 && isset( $wgExtensionAssetsPath ) && $wgExtensionAssetsPath;
-	$eDir = ( $useExtensionPath ? $wgExtensionAssetsPath : $wgScriptPath . '/extensions' );
-	$eDir .= '/SlimboxThumbs/slimbox';
-
-	if ( $mw16 ) {
-		$out->includeJQuery();
-	} else {
-		$out->addScript(
-			'<script type="text/javascript"'.
-			' src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>' . "\n"
-		);
-	}
-
-	$re = str_replace( '\\$1', '[^:]+:(.*)', preg_quote( $wgArticlePath ) );
-
-	$out->addScript( '<script type="text/javascript" src="' . $eDir . '/js/slimbox2.js"></script>' . "\n" );
-	$out->addExtensionStyle( $eDir . '/css/slimbox2.css', 'screen' );
-	$out->addScript( '<script type="text/javascript" src="' . $eDir . '/slimboxthumbs.js"></script>' . "\n" );
-	$out->addInlineScript( "$( window ).on( 'load', function() {".
-		"makeSlimboxThumbs( jQuery, \"".addslashes( $re ).
-		"\", \"".addslashes( $wgServer.$wgScriptPath )."\" ); } );" );
-
+	$out->addModules( 'ext.SlimboxThumbs' );
 	return true;
 }

@@ -4,7 +4,7 @@
  * Contributor(s): Vitaliy Filippov <vitalif@mail.ru>
  */
 
-function makeSlimboxThumbs( $, pathRegexp, wgFullScriptPath ) {
+window.makeSlimboxThumbs = function( $, pathRegexp, wgFullScriptPath ) {
 	var re = new RegExp( pathRegexp );
 	var reExcl = /(^|\/)skins\//;
 	var canview = /\.(jpe?g|jpe|gif|png)$/i;
@@ -74,3 +74,8 @@ function makeSlimboxThumbs( $, pathRegexp, wgFullScriptPath ) {
 		});
 	}
 }
+
+makeSlimboxThumbs(
+	jQuery, mw.config.get( 'wgArticlePath' ).replace( /\$1/, '[^:]+:(.*)' ),
+	mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' )
+);
