@@ -190,7 +190,7 @@
 
 	function animateBox() {
 		center.className = "";
-		$(image).css({backgroundImage: "url(" + activeURL + ")", visibility: "hidden", display: ""});
+		$(image).css({backgroundImage: "url('" + activeURL.replace(new RegExp('([\'\"])', 'g'), '\\\1') + "')", visibility: "hidden", display: ""});
 		$(sizer).width(preload.width);
 		$([sizer, prevLink, nextLink]).height(preload.height);
 
