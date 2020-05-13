@@ -32,11 +32,15 @@ window.makeSlimboxThumbs = function( $, pathRegexp, wgFullScriptPath ) {
 					}
 					var h = r[n].url;
 					can = canview.exec( n );
+					var maxw = null;
 					if ( !can || r[n].width > ww || r[n].height > wh ) {
 						var sc = Math.floor( ww / quant ) * quant;
 						var sh = Math.floor( r[n].width * wh / r[n].height / quant ) * quant;
 						if ( sh < sc ) {
 							sc = sh;
+						}
+						if ( /\.svg$/.exec( n ) ) {
+							maxw = sc;
 						}
 						if ( r[n].local ) {
 							h = wgFullScriptPath + '/thumb.php?f=' + encodeURIComponent( n ) + '&w=' + sc;
@@ -52,7 +56,7 @@ window.makeSlimboxThumbs = function( $, pathRegexp, wgFullScriptPath ) {
 						}
 						n = ( c.text().replace( /^\s+|\s+$/g, '' ) || n.replace( /_/g, ' ' ) ) + ' &rarr;';
 						e.parentNode._lightbox = [
-							h, '<a href="'+e.parentNode.href+'">'+n+'</a>'
+							h, '<a href="'+e.parentNode.href+'">'+n+'</a>', maxw
 						];
 						nodes.push( e.parentNode );
 					}

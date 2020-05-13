@@ -50,7 +50,7 @@ $wgResourceModules['ext.SlimboxThumbs'] = array(
 		'slimbox/css/slimbox2.css',
 	],
 	'scripts' => [
-		'slimbox/js/slimbox2.js',
+		'slimbox/src/slimbox2.js',
 		'slimbox/slimboxthumbs.js',
 	],
 );

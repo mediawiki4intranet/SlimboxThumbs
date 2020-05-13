@@ -4,6 +4,8 @@
 	MIT-style license.
 */
 
+// Warning: patched version
+
 (function($) {
 
 	// Global variables, accessible to Slimbox only
@@ -190,9 +192,14 @@
 
 	function animateBox() {
 		center.className = "";
-		$(image).css({backgroundImage: "url('" + activeURL.replace(new RegExp('([\'\"])', 'g'), '\\\1') + "')", visibility: "hidden", display: ""});
-		$(sizer).width(preload.width);
-		$([sizer, prevLink, nextLink]).height(preload.height);
+		$(image).css({backgroundImage: "url('" + activeURL.replace(new RegExp('([\'\"])', 'g'), '\\\1') + "')", visibility: "hidden", display: "", backgroundSize: 'contain'});
+		var width = preload.width, height = preload.height;
+		if (images[activeImage][2] && images[activeImage][2] < preload.width) {
+			width = images[activeImage][2];
+			height = preload.height * images[activeImage][2] / preload.width;
+		}
+		$(sizer).width(width);
+		$([sizer, prevLink, nextLink]).height(height);
 
 		$(caption).html(images[activeImage][1] || "");
 		$(number).html((((images.length > 1) && options.counterText) || "").replace(/{x}/, activeImage + 1).replace(/{y}/, images.length));
