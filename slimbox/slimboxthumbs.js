@@ -39,7 +39,7 @@ window.makeSlimboxThumbs = function( $, pathRegexp, wgFullScriptPath ) {
 						if ( sh < sc ) {
 							sc = sh;
 						}
-						if ( /\.svg$/.exec( n ) ) {
+						if ( /\.svg$|[\?&]f=[^&]+\.svg(&|$)/.exec( n ) ) {
 							maxw = sc;
 						}
 						if ( r[n].local ) {
